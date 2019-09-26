@@ -1,20 +1,20 @@
 #!/usr/bin/env python
-# -*- coding: latin1 -*-
+# -*- coding: utf-8 -*-
 import csv
-import requests
+import urllib.request
 
 
 def execute(url):
-    with requests.get(url) as entrada:
+    with urllib.request.urlopen(url) as entrada:
         print('Baixando arquivo...')
-        dados = entrada.content.decode('latin1')
+        dados = entrada.read().decode('latin1')
         print('Download completo')
         for cidade in csv.reader(dados.splitlines()):
-            print('{}: {}'.format(cidade[8], cidade[3]))
+            print(f'{cidade[8]}: {cidade[3]}')
         entrada.close()
 
-    if entrada.ok:
-        print('\nArquivo j· foi fechado!')
+    if not entrada.read():
+        print('\nArquivo j√° foi fechado!')
 
 
 if __name__ == '__main__':

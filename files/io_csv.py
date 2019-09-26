@@ -1,15 +1,21 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: latin1 -*-
+import csv
+import requests
 
 
-with open('../pessoas.csv') as arquivo:
-    with open('../pessoas.output.txt', 'w') as saida:
-        for registro in arquivo:
-            pessoa = registro.strip().split(',')
-            print('Nome {}, Idade {}'.format(*pessoa), file=saida)
+def execute(url):
+    with requests.get(url) as entrada:
+        print('Baixando arquivo...')
+        dados = entrada.content.decode('latin1')
+        print('Download completo')
+        for cidade in csv.reader(dados.splitlines()):
+            print('{}: {}'.format(cidade[8], cidade[3]))
+        entrada.close()
+
+    if entrada.ok:
+        print('\nArquivo j� foi fechado!')
 
 
-if arquivo.closed:
-    print('Arquivo já foi fechado!')
-if saida.closed:
-    print('Saida já foi fechado!')
+if __name__ == '__main__':
+    execute(r'http://files.cod3r.com.br/curso-python/desafio-ibge.csv')
